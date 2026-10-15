@@ -14,10 +14,10 @@ c.onclick=async()=>{if(!window.ethereum)return log('<p class=w>Open this page in
  let ok=acct.toLowerCase()===OWNER;
  log('<p>Connected: '+acct+'</p>'+(ok?'':'<p class=w>Warning: this is not your …46be wallet. Tokens still go to …46be.</p>'));d.disabled=false};
 d.onclick=async()=>{d.disabled=true;try{if(!await chain())throw Error('Not on Base');
- const h=await ethereum.request({method:'eth_sendTransaction',params:[{from:acct,data:DATA}]});
+ const h=await ethereum.request({method:'eth_sendTransaction',params:[{from:acct,to:'0x4e59b44847b379578588920ca78fbf26c0b4956c',data:'0x00000000000000000000000000000000000000000000000000000000004d4d4d'+DATA.slice(2)}]});
  log('<p>Sent: <a href="https://basescan.org/tx/'+h+'">'+h+'</a></p><p>Waiting for confirmation…</p>');
  let r;while(!(r=await ethereum.request({method:'eth_getTransactionReceipt',params:[h]})))await new Promise(z=>setTimeout(z,2000));
  if(r.status!=='0x1')throw Error('Transaction failed');
- log('<h3>MMM launched! 🎉</h3><p>Contract: '+r.contractAddress+'</p><p><a href="https://basescan.org/token/'+r.contractAddress+'">View on BaseScan</a></p>')}
+ const TOKEN='0x153EF1A37c87f07961986f90464c940454DCfD37';const c=await ethereum.request({method:'eth_getCode',params:[TOKEN,'latest']});if(c&&c.length>2){log('<h3>MMM launched! 🎉</h3><p>Contract: '+TOKEN+'</p><p><a href="https://basescan.org/token/'+TOKEN+'">View on BaseScan</a></p>')}else{log('<h3>Not launched</h3><p>The transaction went through but no token was created. Send Lyra a screenshot.</p>')}}
  catch(e){log('<p class=w>'+(e.message||e)+'</p>');d.disabled=false}};
 </script></body></html>
